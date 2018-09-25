@@ -1,0 +1,38 @@
+static int x=[](){
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	return 0;
+}();	
+class Solution {
+public:
+    int search(vector<int>& nums, int target) {
+        int index=nums.size()/2,rb=nums.size()-1,lb=0;
+        do
+        {
+            // cout << index << ":" << nums[index] << "\tlb,rb:(" << lb << "," << rb << ")\n";
+            if(nums[index]==target)
+                return index;
+            if(nums[index]>target)
+            {
+                rb=index-1;
+                if(index==(rb+lb)/2)
+                    return -1;
+                index=(rb+lb)/2;
+            }
+            else if(nums[index]<target)
+            {
+                if(lb==index)
+                {
+                    if(nums[index+1]==target)
+                        return index+1;
+                    return -1;
+                }
+                lb=index;
+                // if(index==(rb+lb)/2)
+                //     return -1;
+                index=(rb+lb)/2;
+            }
+        }while(1);
+        // return -1;
+    }
+};
