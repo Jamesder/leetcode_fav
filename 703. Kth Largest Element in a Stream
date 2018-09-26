@@ -1,57 +1,15 @@
-static int x=[](){
-	ios::sync_with_stdio(false);
-	cin.tie(NULL);
-	return 0;
-}();
-bool myf(int i,int j){return (i>j);}
-class KthLargest {
-public:
-    
-    KthLargest(int k, vector<int> nums):target(k) {
-        list.reserve(k+1);
-        if(k==1)
-        {
-            int maxn=INT_MIN;
-            for(int t=0;t<nums.size();t++)
-                maxn=max(maxn,nums[t]);
-            list.push_back(maxn);
+priority_queue<int, vector<int>, greater<int>> pq;
+    int size;
+    KthLargest(int k, vector<int> nums) {
+        size=k;
+        for(int i=0;i<nums.size();i++) {
+            pq.push(nums[i]);
+            if(pq.size()>k) pq.pop();
         }
-        else if(nums.size()>0)
-        {
-            sort(nums.begin(),nums.end(),myf);
-            k=min(k,(int)nums.size());
-            list.insert(list.begin(),nums.begin(),nums.begin()+k);
-            // for(int t=0;t<nums.size();t++)
-                
-            
-        }
-        // for(int t:list)
-        //     cout << t << " ";
-        // cout << endl;
     }
     
-    int add(int val){
-        if(list.size()==target && val < list[target-1])
-            return list[target-1];
-        int iter=0;
-        for(;iter<list.size();iter++)
-        {
-            if(list[iter]<val)
-                break;
-        }
-        list.insert(list.begin()+iter,val);
-        if(list.size()>target)
-            list.pop_back();
-        if(target>list.size())
-            return -1;
-        return list[target-1];
+    int add(int val) {
+        pq.push(val);
+        if(pq.size()>size) pq.pop();
+        return pq.top();
     }
-    int target;
-    vector<int> list;
-};
-
-/**
- * Your KthLargest object will be instantiated and called as such:
- * KthLargest obj = new KthLargest(k, nums);
- * int param_1 = obj.add(val);
- */
