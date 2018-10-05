@@ -7,63 +7,73 @@ class Solution {
 public:
     vector<int> findAnagrams(string s, string p) {    
         vector<int> res;
-        if(s.length() < p.length())
+        if(p.length()>s.length())
             return res;
-        map<char,pair<int,int>> dic;
-        for(int t=0;t<p.length();t++)
-        {
-            dic[p[t]].second++;
-        }
-        
+        int dic[128] = {0};
+        int cur[128] = {0};
+        int length=p.length();
         int align=0;
-        for(int t=0;t<p.length();t++)
+        for(int t=0;t<length;t++)
+            dic[p[t]]++;
+        for(int t=0;t<length;t++)
         {
-            if(dic.find(s[t])!=dic.end())
+            if(dic[s[t]]==0)
+                align++;
+            else
             {
-                //dic.find(s[t])->second.second++;
-                dic[s[t]].first++;
-                if(dic[s[t]].second < dic[s[t]].first)
+                cur[s[t]]++;
+                if(cur[s[t]]>dic[s[t]])
                     align++;
+            }
+        }
+        int head=0,tail=length-1;
+        bool sig=0;
+        if(align==0)
+        {
+            res.push_back(0);
+            sig=1;
+        }
+        while(tail!=s.length()-1)
+        {
+            if(s[++tail]==s[head])
+            {
+                head++;
+                if(sig)
+                    res.push_back(head);
+                continue;
+            }
+            char stail=s[tail];
+            if(dic[stail]==0)
+            {
+                align++;
             }
             else
             {
-                align++;
-            }
-        }
-        if(align==0)
-            res.push_back(0);
-        int head=0,tail=p.length()-1;
-        while(tail!=s.length()-1)
-        {
-            
-            tail++;
-            if(dic.find(s[tail])==dic.end())  // if char not in dic : align++
-            {
-                align++;
-            }
-            else    // if char in dic : dic_char_cur++;
-            {
-                dic[s[tail]].first++;
-                if(dic[s[tail]].first > dic[s[tail]].second) // if dic_char_cur > dic_char_max : align++
+                cur[stail]++;
+                if(cur[stail]>dic[stail])
                     align++;
             }
-            
-
-            if(dic.find(s[head])==dic.end()) // if char not in dic : align--
-                align--;
-            else    // if char in dic : duc_char_cur--
+            char shead=s[head];
+            if(dic[shead]==0)
             {
-                if(dic[s[head]].first > dic[s[head]].second)    // if dic_char_cur > dic_char_max : align--
-                    align--;
-                dic[s[head]].first--;   
+                align--;
             }
-            head++; // dequeue
+            else
+            {
+                if(cur[shead] > dic[shead])
+                    align--;
+                cur[shead]--;
+            }
+            head++;
             if(align==0)
+            {
                 res.push_back(head);
-            
+                sig=1;
+            }
+            else
+                sig=0;
+                
         }
-        
-        
         return res;
     }
 };
