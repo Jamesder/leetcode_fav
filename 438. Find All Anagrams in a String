@@ -1,0 +1,69 @@
+static int x=[](){
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	return 0;
+}();	
+class Solution {
+public:
+    vector<int> findAnagrams(string s, string p) {    
+        vector<int> res;
+        if(s.length() < p.length())
+            return res;
+        map<char,pair<int,int>> dic;
+        for(int t=0;t<p.length();t++)
+        {
+            dic[p[t]].second++;
+        }
+        
+        int align=0;
+        for(int t=0;t<p.length();t++)
+        {
+            if(dic.find(s[t])!=dic.end())
+            {
+                //dic.find(s[t])->second.second++;
+                dic[s[t]].first++;
+                if(dic[s[t]].second < dic[s[t]].first)
+                    align++;
+            }
+            else
+            {
+                align++;
+            }
+        }
+        if(align==0)
+            res.push_back(0);
+        int head=0,tail=p.length()-1;
+        while(tail!=s.length()-1)
+        {
+            
+            tail++;
+            if(dic.find(s[tail])==dic.end())  // if char not in dic : align++
+            {
+                align++;
+            }
+            else    // if char in dic : dic_char_cur++;
+            {
+                dic[s[tail]].first++;
+                if(dic[s[tail]].first > dic[s[tail]].second) // if dic_char_cur > dic_char_max : align++
+                    align++;
+            }
+            
+
+            if(dic.find(s[head])==dic.end()) // if char not in dic : align--
+                align--;
+            else    // if char in dic : duc_char_cur--
+            {
+                if(dic[s[head]].first > dic[s[head]].second)    // if dic_char_cur > dic_char_max : align--
+                    align--;
+                dic[s[head]].first--;   
+            }
+            head++; // dequeue
+            if(align==0)
+                res.push_back(head);
+            
+        }
+        
+        
+        return res;
+    }
+};
